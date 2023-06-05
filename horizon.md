@@ -1,0 +1,52 @@
+# Horizon
+
+<img src="https://laravel.com/img/docs/horizon-example.png" alt="Laravel Horizon" height="600">
+
+- Laravel Horizon a dashboard and code-driven configuration for Redis queues
+- use Redis in production
+- use Horizon for monitoring jobs
+- use [Get notified when a queued job fails](https://github.com/spatie/laravel-failed-job-monitor) form Spatie
+- command of auto-retrying failed jobs
+```php
+<?php
+
+namespace App\Console\Commands;
+
+use Illuminate\Console\Command;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Str;
+use Laravel\Horizon\Jobs\RetryFailedJob;
+
+class RetryFailedJobsCommand extends Command
+{
+    protected $signature = 'queue:retry-failed-jobs';
+
+    protected $description = 'Retry failed job that were pushed between 20 and 10 minutes ago.';
+
+    public function handle()
+    {
+        $failedJobs = collect($this->laravel['queue.failer']->all());
+
+        $failedJobs->filter(function ($failedJob) {
+            return ! isset(json_decode($failedJob->payload)->retry_of);
+        })->filter(function ($failedJob) {
+            // get only jobs that were pushed at least 10 min ago and max 20 min ago
+            if (! isset(json_decode($failedJob->payload)->pushedAt)) {
+                return false;
+            }
+
+            $pushedAt = Carbon::createFromTimestamp(json_decode($failedJob->payload)->pushedAt);
+
+            return $pushedAt->between(Carbon::now()->subMinutes(20), Carbon::now()->subMinutes(10));
+        })->each(function ($failedJob) {
+            dispatch(new RetryFailedJob($failedJob->id));
+        });
+
+        return Command::SUCCESS;
+    }
+}
+```
+
+
+
+[Next](https://github.com/jcergolj/my-laravel-adventure/blob/master/care-for-code.md)
