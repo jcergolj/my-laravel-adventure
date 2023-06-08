@@ -17,7 +17,7 @@
 - [Laravel API](https://laravel.com/api/10.x/)
     - docs of all Laravel related files
 
-     <img src="https://raw.githubusercontent.com/jcergolj/my-laravel-adventure/master/_assets/laravel-api.png?token=GHSAT0AAAAAABP7CO67DZF4K74J3QFEEYP2ZEBVJWA" alt="Laravel API">
+     <img src="https://raw.githubusercontent.com/jcergolj/my-laravel-adventure/master/_assets/laravel-api.png?token=GHSAT0AAAAAABP7CO675C3ZTCTW3AQLUIGOZEBYT7A" alt="Laravel API">
 
 ## Learn, Improve, Code
 - [Laracast](https://laracasts.com/)
